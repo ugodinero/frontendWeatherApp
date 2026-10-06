@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether Weather - Modern 3D Weather Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-light">
+
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm px-4 py-3 sticky-top">
+        <div class="container-fluid max-w-7xl">
+            <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="#">
+                <div class="brand-icon me-2 text-white bg-primary rounded d-flex align-items-center justify-content-center"
+                    style="width: 36px; height: 36px;">
+                    <i class="fa-solid fa-cloud"></i>
+                </div>
+                Aether
+            </a>
+
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <form class="d-flex mx-auto position-relative search-form my-2 my-lg-0 w-50" id="weatherForm">
+                    <i
+                        class="fa-solid fa-location-dot position-absolute top-50 start-0 translate-middle-y ms-3 text-danger"></i>
+                    <input class="form-control rounded-pill ps-5 bg-light border-0 search-input" id="searchInput"
+                        type="search" placeholder="Search city, region..." value="London">
+                    <button class="btn btn-primary btn-sm rounded-pill fw-medium px-3 ms-2" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+
+                <div class="d-flex align-items-center ms-auto gap-3 mt-3 mt-lg-0">
+                    <!-- Unit Switcher -->
+                    <div class="unit-switcher bg-light p-1 rounded-pill d-flex border">
+                        <button class="btn btn-primary btn-sm rounded-pill px-3 fw-bold active">°C</button>
+                        <button class="btn btn-sm rounded-pill px-3 fw-bold text-muted border-0">°F</button>
+                    </div>
+
+                    <!-- Notification -->
+                    <button class="btn btn-light rounded-circle shadow-sm position-relative icon-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white">
+                            2
+                        </span>
+                    </button>
+
+                    <!-- User Profile -->
+                    <div class="user-profile rounded-circle overflow-hidden shadow-sm border border-2 border-primary"
+                        style="width: 40px; height: 40px;">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="User" class="w-100 h-100 object-fit-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="weatherError" class="text-danger small text-center mt-3" style="display:none;"></div>
+
+    <!-- Main Content -->
+    <main class="container py-4 max-w-7xl">
+        <div class="row g-4">
+            <!-- Left Column: Hero & Today Forecast -->
+            <div class="col-lg-8">
+                <!-- Location Info -->
+                <div class="mb-3">
+                    <h2 class="fw-bold mb-0" id="cityName">London,</h2>
+                    <p class="text-muted small fw-semibold" id="locationSub">United Kingdom • Sun, 27 Sep</p>
+                </div>
+
+                <!-- Hero Card -->
+                <div class="hero-card rounded-4 p-4 p-md-5 text-white position-relative overflow-hidden shadow-lg mb-4">
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-between align-items-center align-items-md-start position-relative z-index-1">
+                        <!-- Left side -->
+                        <div class="text-center text-md-start mb-4 mb-md-0">
+                            <div class="weather-art mb-3">
+                                <i class="fa-solid fa-cloud-showers-heavy text-white opacity-75" id="weatherIcon"
+                                    style="font-size: 5rem; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));"></i>
+                            </div>
+                            <h1 class="display-5 fw-bold mb-0 text-shadow" id="conditionText">Heavy Rain</h1>
+                            <p class="fs-5 text-white-50 fw-medium" id="timeOfDay">Now</p>
+                        </div>
+
+                        <!-- Right side -->
+                        <div class="text-center text-md-end">
+                            <div class="d-flex align-items-start justify-content-center justify-content-md-end">
+                                <h1 class="display-1 fw-bold mb-0 text-shadow" id="tempValue" style="line-height: 0.8;">
+                                    27</h1>
+                                <span class="display-4 fw-bold mt-2">°</span>
+                            </div>
+                            <div
+                                class="badge bg-white bg-opacity-25 text-white rounded-pill px-3 py-2 mt-3 fw-semibold border border-white border-opacity-25">
+                                Feels like <span id="feelsLikeValue">32</span>°
+                            </div>
+                            <p class="small text-white-50 fw-medium mt-2 mb-0" id="updatedTime">Updated 5 min ago</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics -->
+                <div class="row g-3 mb-4">
+                    <div class="col-4">
+                        <div
+                            class="metric-card bg-white rounded-4 p-3 text-center shadow-sm h-100 border transition-hover">
+                            <div
+                                class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-inline-flex p-3 mb-2">
+                                <i class="fa-solid fa-cloud fs-5"></i>
+                            </div>
+                            <div class="text-muted small fw-bold text-uppercase">Cloud Cover</div>
+                            <div class="fs-5 fw-bold" id="cloudValue">28%</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div
+                            class="metric-card bg-white rounded-4 p-3 text-center shadow-sm h-100 border transition-hover">
+                            <div
+                                class="icon-box bg-warning bg-opacity-10 text-warning rounded-3 d-inline-flex p-3 mb-2">
+                                <i class="fa-solid fa-wind fs-5"></i>
+                            </div>
+                            <div class="text-muted small fw-bold text-uppercase">Wind Speed</div>
+                            <div class="fs-5 fw-bold" id="windValue">8 km/h</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div
+                            class="metric-card bg-white rounded-4 p-3 text-center shadow-sm h-100 border transition-hover">
+                            <div class="icon-box bg-info bg-opacity-10 text-info rounded-3 d-inline-flex p-3 mb-2">
+                                <i class="fa-solid fa-water fs-5"></i>
+                            </div>
+                            <div class="text-muted small fw-bold text-uppercase">Humidity</div>
+                            <div class="fs-5 fw-bold" id="humidityValue">64%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today Forecast (static — see note below the code) -->
+                <div class="bg-white rounded-4 p-4 shadow-sm border mb-4 mb-lg-0">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold mb-0">Today</h4>
+                        <a href="#" class="text-primary text-decoration-none fw-bold small">Next 7 Days <i
+                                class="fa-solid fa-chevron-right ms-1"></i></a>
+                    </div>
+
+                    <div class="d-flex gap-3 overflow-auto pb-2 forecast-scroll hide-scrollbar">
+                        <div class="forecast-pill bg-light border rounded-pill py-3 px-2 text-center d-flex flex-column align-items-center transition-hover"
+                            style="min-width: 80px;">
+                            <span class="small fw-bold text-muted">12:00</span>
+                            <i class="fa-solid fa-cloud text-primary fs-4 my-2"></i>
+                            <span class="fw-bold">23°</span>
+                        </div>
+                        <div class="forecast-pill bg-primary border border-primary border-opacity-50 text-white rounded-pill py-3 px-2 text-center d-flex flex-column align-items-center shadow transform-scale"
+                            style="min-width: 80px;">
+                            <span class="small fw-bold text-white-50">02:00</span>
+                            <i class="fa-solid fa-cloud-bolt text-white fs-4 my-2"></i>
+                            <span class="fw-bold">27°</span>
+                        </div>
+                        <div class="forecast-pill bg-light border rounded-pill py-3 px-2 text-center d-flex flex-column align-items-center transition-hover"
+                            style="min-width: 80px;">
+                            <span class="small fw-bold text-muted">04:00</span>
+                            <i class="fa-solid fa-cloud-rain text-primary fs-4 my-2"></i>
+                            <span class="fw-bold">25°</span>
+                        </div>
+                        <div class="forecast-pill bg-light border rounded-pill py-3 px-2 text-center d-flex flex-column align-items-center transition-hover"
+                            style="min-width: 80px;">
+                            <span class="small fw-bold text-muted">06:00</span>
+                            <i class="fa-solid fa-cloud-sun text-warning fs-4 my-2"></i>
+                            <span class="fw-bold">24°</span>
+                        </div>
+                        <div class="forecast-pill bg-light border rounded-pill py-3 px-2 text-center d-flex flex-column align-items-center transition-hover"
+                            style="min-width: 80px;">
+                            <span class="small fw-bold text-muted">08:00</span>
+                            <i class="fa-solid fa-sun text-warning fs-4 my-2"></i>
+                            <span class="fw-bold">26°</span>
+                        </div>
+                        <div class="forecast-pill bg-light border rounded-pill py-3 px-2 text-center d-flex flex-column align-items-center transition-hover"
+                            style="min-width: 80px;">
+                            <span class="small fw-bold text-muted">10:00</span>
+                            <i class="fa-solid fa-sun text-warning fs-4 my-2"></i>
+                            <span class="fw-bold">28°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <div class="bg-white rounded-4 p-4 shadow-sm border h-100">
+                    <h4 class="fw-bold mb-4">7-Day Forecast</h4>
+
+                    <div class="d-flex flex-column gap-3">
+                        <div
+                            class="d-flex align-items-center justify-content-between p-2 rounded-3 hover-bg-light transition-hover">
+                            <span class="fw-bold text-muted" style="width: 50px;">Mon</span>
+                            <i class="fa-solid fa-cloud-rain text-primary fs-5"></i>
+                            <div class="fw-bold">24° <span class="text-muted small ms-1">18°</span></div>
+                        </div>
+                        <div
+                            class="d-flex align-items-center justify-content-between p-2 rounded-3 hover-bg-light transition-hover">
+                            <span class="fw-bold text-muted" style="width: 50px;">Tue</span>
+                            <i class="fa-solid fa-sun text-warning fs-5"></i>
+                            <div class="fw-bold">28° <span class="text-muted small ms-1">20°</span></div>
+                        </div>
+                        <div
+                            class="d-flex align-items-center justify-content-between p-2 rounded-3 hover-bg-light transition-hover">
+                            <span class="fw-bold text-muted" style="width: 50px;">Wed</span>
+                            <i class="fa-solid fa-cloud-sun text-warning fs-5"></i>
+                            <div class="fw-bold">26° <span class="text-muted small ms-1">19°</span></div>
+                        </div>
+                        <div
+                            class="d-flex align-items-center justify-content-between p-2 rounded-3 hover-bg-light transition-hover">
+                            <span class="fw-bold text-muted" style="width: 50px;">Thu</span>
+                            <i class="fa-solid fa-cloud text-secondary fs-5"></i>
+                            <div class="fw-bold">22° <span class="text-muted small ms-1">17°</span></div>
+                        </div>
+                        <div
+                            class="d-flex align-items-center justify-content-between p-2 rounded-3 hover-bg-light transition-hover">
+                            <span class="fw-bold text-muted" style="width: 50px;">Fri</span>
+                            <i class="fa-solid fa-cloud-showers-heavy text-primary fs-5"></i>
+                            <div class="fw-bold">21° <span class="text-muted small ms-1">16°</span></div>
+                        </div>
+                        <div
+                            class="d-flex align-items-center justify-content-between p-2 rounded-3 hover-bg-light transition-hover">
+                            <span class="fw-bold text-muted" style="width: 50px;">Sat</span>
+                            <i class="fa-solid fa-sun text-warning fs-5"></i>
+                            <div class="fw-bold">25° <span class="text-muted small ms-1">18°</span></div>
+                        </div>
+                        <div
+                            class="d-flex align-items-center justify-content-between p-2 rounded-3 hover-bg-light transition-hover">
+                            <span class="fw-bold text-muted" style="width: 50px;">Sun</span>
+                            <i class="fa-solid fa-sun text-warning fs-5"></i>
+                            <div class="fw-bold">27° <span class="text-muted small ms-1">19°</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script2.js"></script>
+</body>
+
+</html>
